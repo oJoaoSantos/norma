@@ -1,0 +1,12 @@
+# DOMAIN vem do .env. Com um domínio real (e o DNS já a apontar para o IP
+# desta VM), a Caddy ativa HTTPS automático (Let's Encrypt) sem mais
+# nenhuma configuração. Sem domínio, deixa DOMAIN=:80 no .env — fica a
+# servir HTTP simples na porta 80, acessível pelo IP da VM.
+#
+# (Nota: Caddy só aplica um valor por omissão em "{$VAR:default}" quando a
+# variável está mesmo por definir — o docker-compose sempre define DOMAIN
+# a partir do .env, mesmo que vazia, por isso o valor por omissão tem de
+# vir do próprio .env, não daqui.)
+{$DOMAIN} {
+	reverse_proxy app:3000
+}

@@ -1,0 +1,184 @@
+{
+  "id": "4d8dadcb-a87b-432f-81e1-20b931deea7a",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.memorias_descritivas": {
+      "name": "memorias_descritivas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "requerente_nome": {
+          "name": "requerente_nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tecnico_nome": {
+          "name": "tecnico_nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tecnico_numero_ordem": {
+          "name": "tecnico_numero_ordem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "concelho": {
+          "name": "concelho",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "freguesia": {
+          "name": "freguesia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artigo_matricial": {
+          "name": "artigo_matricial",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "morada": {
+          "name": "morada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "area_total_construcao": {
+          "name": "area_total_construcao",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "area_implantacao": {
+          "name": "area_implantacao",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cercea_metros": {
+          "name": "cercea_metros",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_pisos": {
+          "name": "numero_pisos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "volume_metros_cubicos": {
+          "name": "volume_metros_cubicos",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revestimento_fachada": {
+          "name": "revestimento_fachada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "caixilharia": {
+          "name": "caixilharia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isolamento_termico_acustico": {
+          "name": "isolamento_termico_acustico",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo_obra": {
+          "name": "tipo_obra",
+          "type": "tipo_obra",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generated_text": {
+          "name": "generated_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'rascunho'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": [
+        "rascunho",
+        "gerado",
+        "exportado"
+      ]
+    },
+    "public.tipo_obra": {
+      "name": "tipo_obra",
+      "schema": "public",
+      "values": [
+        "construcao_nova",
+        "ampliacao",
+        "alteracao",
+        "demolicao"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
