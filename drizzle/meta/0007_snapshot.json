@@ -1,0 +1,828 @@
+{
+  "id": "d9488b60-9e9e-46df-9f07-ea7af2140ef0",
+  "prevId": "3cca1450-5432-4b61-ac5e-7819a781cd10",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.entidades": {
+      "name": "entidades",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.legislacao_concelhos": {
+      "name": "legislacao_concelhos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "concelho": {
+          "name": "concelho",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conteudo": {
+          "name": "conteudo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "legislacao_concelhos_concelho_unique": {
+          "name": "legislacao_concelhos_concelho_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "concelho"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.memoria_versoes": {
+      "name": "memoria_versoes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "memoria_id": {
+          "name": "memoria_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao": {
+          "name": "versao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generated_text": {
+          "name": "generated_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "memoria_versoes_memoria_id_memorias_descritivas_id_fk": {
+          "name": "memoria_versoes_memoria_id_memorias_descritivas_id_fk",
+          "tableFrom": "memoria_versoes",
+          "tableTo": "memorias_descritivas",
+          "columnsFrom": [
+            "memoria_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "memoria_versoes_created_by_users_id_fk": {
+          "name": "memoria_versoes_created_by_users_id_fk",
+          "tableFrom": "memoria_versoes",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.memorias_descritivas": {
+      "name": "memorias_descritivas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "projeto_id": {
+          "name": "projeto_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "memoria_tipo",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'arquitetura'"
+        },
+        "versao_atual": {
+          "name": "versao_atual",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requerente_nome": {
+          "name": "requerente_nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "requerente_nif": {
+          "name": "requerente_nif",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "requerente_morada": {
+          "name": "requerente_morada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tecnico_nome": {
+          "name": "tecnico_nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tecnico_numero_ordem": {
+          "name": "tecnico_numero_ordem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "concelho": {
+          "name": "concelho",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "freguesia": {
+          "name": "freguesia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "artigo_matricial": {
+          "name": "artigo_matricial",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "morada": {
+          "name": "morada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "natureza_predio": {
+          "name": "natureza_predio",
+          "type": "natureza_predio",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_registo_predial": {
+          "name": "numero_registo_predial",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "area_terreno": {
+          "name": "area_terreno",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "confrontacao_norte": {
+          "name": "confrontacao_norte",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "confrontacao_sul": {
+          "name": "confrontacao_sul",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "confrontacao_nascente": {
+          "name": "confrontacao_nascente",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "confrontacao_poente": {
+          "name": "confrontacao_poente",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enquadramento_envolvente": {
+          "name": "enquadramento_envolvente",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area_total_construcao": {
+          "name": "area_total_construcao",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "area_implantacao": {
+          "name": "area_implantacao",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cercea_metros": {
+          "name": "cercea_metros",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_pisos": {
+          "name": "numero_pisos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "volume_metros_cubicos": {
+          "name": "volume_metros_cubicos",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numero_estacionamentos": {
+          "name": "numero_estacionamentos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cota_soleira": {
+          "name": "cota_soleira",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area_impermeabilizacao": {
+          "name": "area_impermeabilizacao",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compartimentos": {
+          "name": "compartimentos",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revestimento_fachada": {
+          "name": "revestimento_fachada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "caixilharia": {
+          "name": "caixilharia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isolamento_termico_acustico": {
+          "name": "isolamento_termico_acustico",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo_obra": {
+          "name": "tipo_obra",
+          "type": "tipo_obra",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generated_text": {
+          "name": "generated_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'rascunho'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "memorias_descritivas_projeto_id_projetos_id_fk": {
+          "name": "memorias_descritivas_projeto_id_projetos_id_fk",
+          "tableFrom": "memorias_descritivas",
+          "tableTo": "projetos",
+          "columnsFrom": [
+            "projeto_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "memorias_descritivas_created_by_users_id_fk": {
+          "name": "memorias_descritivas_created_by_users_id_fk",
+          "tableFrom": "memorias_descritivas",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.projeto_acessos": {
+      "name": "projeto_acessos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "projeto_id": {
+          "name": "projeto_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permissao": {
+          "name": "permissao",
+          "type": "permissao",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'visualizacao'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "projeto_acessos_projeto_id_projetos_id_fk": {
+          "name": "projeto_acessos_projeto_id_projetos_id_fk",
+          "tableFrom": "projeto_acessos",
+          "tableTo": "projetos",
+          "columnsFrom": [
+            "projeto_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "projeto_acessos_user_id_users_id_fk": {
+          "name": "projeto_acessos_user_id_users_id_fk",
+          "tableFrom": "projeto_acessos",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.projetos": {
+      "name": "projetos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "entidade_id": {
+          "name": "entidade_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "projetos_entidade_id_entidades_id_fk": {
+          "name": "projetos_entidade_id_entidades_id_fk",
+          "tableFrom": "projetos",
+          "tableTo": "entidades",
+          "columnsFrom": [
+            "entidade_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "projetos_created_by_users_id_fk": {
+          "name": "projetos_created_by_users_id_fk",
+          "tableFrom": "projetos",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_ordem": {
+          "name": "numero_ordem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "entidade_id": {
+          "name": "entidade_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "docx_fonte": {
+          "name": "docx_fonte",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Times New Roman'"
+        },
+        "docx_tamanho_pt": {
+          "name": "docx_tamanho_pt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 11
+        },
+        "docx_espacamento": {
+          "name": "docx_espacamento",
+          "type": "espacamento",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'simples'"
+        },
+        "docx_alinhamento": {
+          "name": "docx_alinhamento",
+          "type": "alinhamento",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'justificado'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_entidade_id_entidades_id_fk": {
+          "name": "users_entidade_id_entidades_id_fk",
+          "tableFrom": "users",
+          "tableTo": "entidades",
+          "columnsFrom": [
+            "entidade_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.alinhamento": {
+      "name": "alinhamento",
+      "schema": "public",
+      "values": [
+        "esquerda",
+        "justificado"
+      ]
+    },
+    "public.espacamento": {
+      "name": "espacamento",
+      "schema": "public",
+      "values": [
+        "simples",
+        "media",
+        "duplo"
+      ]
+    },
+    "public.memoria_tipo": {
+      "name": "memoria_tipo",
+      "schema": "public",
+      "values": [
+        "arquitetura"
+      ]
+    },
+    "public.natureza_predio": {
+      "name": "natureza_predio",
+      "schema": "public",
+      "values": [
+        "rustica",
+        "urbana",
+        "mista"
+      ]
+    },
+    "public.permissao": {
+      "name": "permissao",
+      "schema": "public",
+      "values": [
+        "visualizacao",
+        "edicao"
+      ]
+    },
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "root",
+        "admin",
+        "arquiteto",
+        "engenheiro"
+      ]
+    },
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": [
+        "rascunho",
+        "gerado",
+        "exportado"
+      ]
+    },
+    "public.tipo_obra": {
+      "name": "tipo_obra",
+      "schema": "public",
+      "values": [
+        "construcao_nova",
+        "ampliacao",
+        "alteracao",
+        "demolicao"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -164,6 +164,7 @@ export const memoriasDescritivas = pgTable("memorias_descritivas", {
   confrontacaoSul: text("confrontacao_sul").notNull(),
   confrontacaoNascente: text("confrontacao_nascente").notNull(),
   confrontacaoPoente: text("confrontacao_poente").notNull(),
+  enquadramentoEnvolvente: text("enquadramento_envolvente"),
 
   // Parâmetros urbanísticos
   areaTotalConstrucao: numeric("area_total_construcao").notNull(),

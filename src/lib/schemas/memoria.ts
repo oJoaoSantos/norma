@@ -54,6 +54,7 @@ export const memoriaInputSchema = z
     confrontacaoSul: z.string().min(1, "Obrigatório"),
     confrontacaoNascente: z.string().min(1, "Obrigatório"),
     confrontacaoPoente: z.string().min(1, "Obrigatório"),
+    enquadramentoEnvolvente: z.string().optional(),
 
     // Parâmetros urbanísticos
     areaTotalConstrucao: z.coerce.number().positive("Tem de ser positivo"),

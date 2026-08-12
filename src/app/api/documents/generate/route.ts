@@ -6,7 +6,7 @@ import { getProjetoPermissao } from "@/lib/db/access";
 import { db } from "@/lib/db";
 import { memoriaVersoes, memoriasDescritivas, projetos, users } from "@/lib/db/schema";
 import { getProvider } from "@/lib/llm";
-import { buildQuadroSinotico, buildSystemPrompt, buildUserPrompt } from "@/lib/prompt";
+import { buildSystemPrompt, buildUserPrompt } from "@/lib/prompt";
 import { memoriaInputSchema } from "@/lib/schemas/memoria";
 
 const requestSchema = memoriaInputSchema.and(
@@ -89,6 +89,7 @@ export async function POST(request: Request) {
       confrontacaoSul: data.confrontacaoSul,
       confrontacaoNascente: data.confrontacaoNascente,
       confrontacaoPoente: data.confrontacaoPoente,
+      enquadramentoEnvolvente: data.enquadramentoEnvolvente,
 
       areaTotalConstrucao: String(data.areaTotalConstrucao),
       areaImplantacao: String(data.areaImplantacao),
@@ -124,7 +125,11 @@ export async function POST(request: Request) {
       numeroOrdem: tecnicoNumeroOrdem,
     }),
   });
-  const generatedText = `${corpo}\n\n${buildQuadroSinotico(data)}`;
+  // O Quadro Sinótico já não fica embutido no texto editável — é
+  // recalculado de forma determinística a partir dos dados gravados só no
+  // momento de exportar para .docx (ver build-memoria.ts), para nunca
+  // poder ser alterado por engano na edição nem gerado pelo LLM.
+  const generatedText = corpo;
 
   const [updated] = await db
     .update(memoriasDescritivas)

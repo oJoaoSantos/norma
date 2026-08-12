@@ -30,9 +30,11 @@ export function SpotlightArea({
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
     >
-      <div className="hero-grid pointer-events-none absolute inset-0" />
+      {/* Grelha + realce a seguir o cursor: não fazem sentido em touch (sem
+          hover) e só acrescentam peso visual num ecrã pequeno. */}
+      <div className="hero-grid pointer-events-none absolute inset-0 hidden sm:block" />
       <div
-        className="hero-grid-spot pointer-events-none absolute inset-0"
+        className="hero-grid-spot pointer-events-none absolute inset-0 hidden sm:block"
         style={{ opacity: active ? 1 : 0 }}
       />
       {children}

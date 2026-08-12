@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { getProjetoPermissao } from "@/lib/db/access";
 import { db } from "@/lib/db";
 import { memoriaVersoes, memoriasDescritivas, projetos, users } from "@/lib/db/schema";
+import { DeleteMemoriaButton } from "./DeleteMemoriaButton";
 import { RegenerarButton } from "./RegenerarButton";
 import { VersionHistory } from "./VersionHistory";
 
@@ -45,15 +46,18 @@ export default async function MemoriaDetailPage({
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-6 py-16">
-      <div>
-        <Link href={`/projetos/${projeto.id}`} className="text-sm text-zinc-500 hover:underline">
-          ← {projeto.nome}
-        </Link>
-        <h1 className="mt-1 text-2xl font-semibold">{record.requerenteNome}</h1>
-        <p className="text-sm text-zinc-500">
-          {record.concelho} — {record.freguesia} · versão {record.versaoAtual}
-          {criador && ` · criado por ${criador.name}`}
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <Link href={`/projetos/${projeto.id}`} className="text-sm text-zinc-500 hover:underline">
+            ← {projeto.nome}
+          </Link>
+          <h1 className="text-2xl font-semibold">{record.requerenteNome}</h1>
+          <p className="text-sm text-zinc-500">
+            {record.concelho} — {record.freguesia} · versão {record.versaoAtual}
+            {criador && ` · criado por ${criador.name}`}
+          </p>
+        </div>
+        {editable && <DeleteMemoriaButton memoriaId={record.id} />}
       </div>
 
       {record.generatedText ? (

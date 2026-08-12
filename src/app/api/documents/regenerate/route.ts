@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { memoriaVersoes, memoriasDescritivas, projetos } from "@/lib/db/schema";
 import { memoriaToInput } from "@/lib/db/mappers";
 import { getProvider } from "@/lib/llm";
-import { buildQuadroSinotico, buildSystemPrompt, buildUserPrompt } from "@/lib/prompt";
+import { buildSystemPrompt, buildUserPrompt } from "@/lib/prompt";
 
 const requestSchema = z.object({ memoriaId: z.string().uuid() });
 
@@ -52,7 +52,9 @@ export async function POST(request: Request) {
       numeroOrdem: record.tecnicoNumeroOrdem,
     }),
   });
-  const generatedText = `${corpo}\n\n${buildQuadroSinotico(data)}`;
+  // Ver nota equivalente em generate/route.ts — o Quadro Sinótico já não
+  // fica embutido no texto, é recalculado a partir dos dados no export.
+  const generatedText = corpo;
   const novaVersao = record.versaoAtual + 1;
 
   await db

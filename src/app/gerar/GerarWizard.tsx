@@ -50,6 +50,7 @@ const STEPS: Step[] = [
       "confrontacaoSul",
       "confrontacaoNascente",
       "confrontacaoPoente",
+      "enquadramentoEnvolvente",
     ],
   },
   {
@@ -316,6 +317,7 @@ const FIELD_LABELS: Record<keyof MemoriaFormInput, string> = {
   confrontacaoSul: "Confrontação Sul",
   confrontacaoNascente: "Confrontação Nascente",
   confrontacaoPoente: "Confrontação Poente",
+  enquadramentoEnvolvente: "Enquadramento da envolvente — opcional",
   areaTotalConstrucao: "Área total de construção (m²)",
   areaImplantacao: "Área de implantação (m²)",
   cerceaMetros: "Cércea (m)",
@@ -348,6 +350,8 @@ const SELECT_OPTIONS: Partial<Record<keyof MemoriaFormInput, readonly { value: s
   naturezaPredio: NATUREZA_PREDIO_OPTIONS,
 };
 
+const TEXTAREA_FIELDS: (keyof MemoriaFormInput)[] = ["enquadramentoEnvolvente"];
+
 function FormField({
   name,
   register,
@@ -374,6 +378,12 @@ function FormField({
             </option>
           ))}
         </select>
+      ) : TEXTAREA_FIELDS.includes(name) ? (
+        <textarea
+          rows={3}
+          {...register(name)}
+          className="rounded border border-zinc-300 bg-white p-2 dark:border-zinc-700 dark:bg-zinc-900"
+        />
       ) : (
         <input
           type={NUMERIC_FIELDS.includes(name) ? "number" : "text"}

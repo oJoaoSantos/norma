@@ -1,0 +1,1 @@
+ALTER TABLE "memorias_descritivas" ADD COLUMN "enquadramento_envolvente" text;

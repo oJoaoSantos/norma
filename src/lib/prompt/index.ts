@@ -67,8 +67,14 @@ números de artigo — refere o RJUE (Decreto-Lei n.º 555/99) e o RGEU
 És um assistente que redige Memórias Descritivas e Justificativas para
 processos de licenciamento/comunicação prévia em Câmaras Municipais
 portuguesas, no âmbito do RJUE (Decreto-Lei n.º 555/99). O teu padrão de
-qualidade é o de um arquiteto português experiente a escrever para uma
-Câmara Municipal — técnico, formal, denso, nunca genérico ou vago.
+qualidade é o de um arquiteto português sénior a escrever para uma Câmara
+Municipal — técnico, formal, denso, nunca genérico ou vago. Varia o
+vocabulário e a construção frásica entre secções (evita repetir as mesmas
+fórmulas/frases feitas de secção para secção); cada secção deve ler-se como
+escrita com atenção ao caso concreto, não como preenchimento de um molde.
+Isto aplica-se só à qualidade da prosa — nunca à exatidão factual: as
+regras abaixo sobre não inventar números, citações ou dados continuam a
+aplicar-se integralmente.
 
 MODELO DE REFERÊNCIA (estrutura e tom de uma memória real aprovada — os
 dados deste modelo são fictícios, serve APENAS de referência de estilo e
@@ -87,6 +93,14 @@ Regras obrigatórias:
 - Na secção "Utilização da Edificação", se for fornecida uma lista de
   compartimentos, descreve o programa funcional com base nela; caso
   contrário, mantém a descrição genérica de acordo com o tipo de obra.
+- Na secção "Condicionantes de Relacionamento Formal e Funcional com a
+  Envolvente", se for fornecido um texto de "Enquadramento da envolvente",
+  usa-o como base concreta da secção (características da zona, tipologia
+  predominante, infraestruturas existentes, etc.) em vez de escreveres em
+  termos genéricos — mas não inventes nenhum facto sobre a envolvente que
+  não esteja nesse texto ou nos restantes dados fornecidos. Se não for
+  fornecido, mantém a descrição genérica adequada ao tipo de obra e à
+  natureza do prédio, tal como fazias até agora.
 - Na secção "Opções Técnicas, Integração Urbana e Paisagística", usa
   subtítulos próprios (cada um sozinho na sua linha, sem markdown) para
   cada elemento construtivo, nesta ordem: ${SUBSECCOES_OPCOES_TECNICAS.join(", ")}.
@@ -157,6 +171,7 @@ Terreno e confrontações:
 - Confrontação Sul: ${data.confrontacaoSul}
 - Confrontação Nascente: ${data.confrontacaoNascente}
 - Confrontação Poente: ${data.confrontacaoPoente}
+${data.enquadramentoEnvolvente ? `\nEnquadramento da envolvente:\n${data.enquadramentoEnvolvente}` : ""}
 
 Tipo de obra: ${TIPO_OBRA_LABEL[data.tipoObra]}
 
@@ -176,41 +191,56 @@ ${compartimentosTexto ? `\nCompartimentos:\n${compartimentosTexto}` : ""}
 `.trim();
 }
 
+export interface QuadroSinotico {
+  titulo: string;
+  /** Pares [label, valor] — uma linha por indicador. */
+  linhas: [string, string][];
+  /** Pares [compartimento, área] — vazio se não houver compartimentos. */
+  quadroAreas: [string, string][];
+}
+
 /**
  * Secção "Quadro Sinótico e Quadro de Áreas" construída de forma
- * determinística a partir dos dados reais — nunca passa pelo LLM, para que
- * os números nunca possam ser inventados ou alterados na geração. Os
- * índices urbanísticos são calculados diretamente a partir da área do
- * terreno; indicadores que continuam a não ser recolhidos (cota de soleira,
- * área de impermeabilização, n.º de estacionamentos) ficam explicitamente
- * marcados como não preenchidos quando o utilizador não os fornece.
+ * determinística a partir dos dados reais — nunca passa pelo LLM nem fica
+ * embutida no texto editável, para que os números nunca possam ser
+ * inventados na geração nem alterados sem querer na edição. Devolve dados
+ * estruturados; quem chama decide como representar (o exportador docx
+ * gera uma tabela real a partir disto — ver build-memoria.ts). Os índices
+ * urbanísticos são calculados diretamente a partir da área do terreno;
+ * indicadores que continuam a não ser recolhidos (cota de soleira, área de
+ * impermeabilização, n.º de estacionamentos) ficam explicitamente marcados
+ * como não preenchidos quando o utilizador não os fornece.
  */
-export function buildQuadroSinotico(data: MemoriaInput): string {
+export function buildQuadroSinotico(data: MemoriaInput): QuadroSinotico {
   const indiceOcupacao = data.areaImplantacao / data.areaTerreno;
   const indiceUtilizacao = data.areaTotalConstrucao / data.areaTerreno;
 
-  const linhas = [
-    `Área do terreno: ${data.areaTerreno} m²`,
-    `Área total de implantação: ${data.areaImplantacao} m²`,
-    `Área total de construção: ${data.areaTotalConstrucao} m²`,
-    `Cércea: ${data.cerceaMetros} m`,
-    `Pisos acima da cota de soleira: ${data.numeroPisos}`,
-    data.volumeMetrosCubicos ? `Volumetria: ${data.volumeMetrosCubicos} m³` : null,
-    `Índice de ocupação do solo: ${indiceOcupacao.toFixed(2)}`,
-    `Índice de utilização do solo: ${indiceUtilizacao.toFixed(2)}`,
-    `N.º de estacionamentos: ${data.numeroEstacionamentos ?? "por preencher"}`,
-    `Cota de soleira: ${data.cotaSoleira ?? "por preencher"}`,
-    `Área de impermeabilização: ${data.areaImpermeabilizacao ?? "por preencher"}`,
-  ].filter((l): l is string => l !== null);
+  const linhas: [string, string][] = [
+    ["Área do terreno", `${data.areaTerreno} m²`],
+    ["Área total de implantação", `${data.areaImplantacao} m²`],
+    ["Área total de construção", `${data.areaTotalConstrucao} m²`],
+    ["Cércea", `${data.cerceaMetros} m`],
+    ["Pisos acima da cota de soleira", `${data.numeroPisos}`],
+    ...(data.volumeMetrosCubicos != null
+      ? ([["Volumetria", `${data.volumeMetrosCubicos} m³`]] as [string, string][])
+      : []),
+    ["Índice de ocupação do solo", indiceOcupacao.toFixed(2)],
+    ["Índice de utilização do solo", indiceUtilizacao.toFixed(2)],
+    [
+      "N.º de estacionamentos",
+      data.numeroEstacionamentos != null ? String(data.numeroEstacionamentos) : "por preencher",
+    ],
+    ["Cota de soleira", data.cotaSoleira != null ? String(data.cotaSoleira) : "por preencher"],
+    [
+      "Área de impermeabilização",
+      data.areaImpermeabilizacao != null ? String(data.areaImpermeabilizacao) : "por preencher",
+    ],
+  ];
 
-  const quadroAreas =
-    data.compartimentos.length > 0
-      ? [
-          "",
-          "Quadro de Áreas:",
-          ...data.compartimentos.map((c) => `${c.nome}: ${c.area} m²`),
-        ]
-      : [];
+  const quadroAreas: [string, string][] = data.compartimentos.map((c) => [
+    c.nome,
+    `${c.area} m²`,
+  ]);
 
-  return [QUADRO_SINOTICO_TITULO, "", ...linhas, ...quadroAreas].join("\n");
+  return { titulo: QUADRO_SINOTICO_TITULO, linhas, quadroAreas };
 }

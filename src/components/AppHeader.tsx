@@ -4,6 +4,7 @@ import Link from "next/link";
 import { auth, signOut } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { entidades } from "@/lib/db/schema";
+import { MobileNav } from "@/components/MobileNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export async function AppHeader() {
@@ -20,6 +21,16 @@ export async function AppHeader() {
     await signOut({ redirectTo: "/" });
   }
 
+  const navLinks: { href: string; label: string }[] =
+    user?.role === "root"
+      ? [{ href: "/root", label: "Entidades" }]
+      : [
+          { href: "/ajuda", label: "Ajuda" },
+          ...(user ? [{ href: "/projetos", label: "Projetos" }] : []),
+          ...(user ? [{ href: "/memorias", label: "Memórias" }] : []),
+          ...(user?.role === "admin" ? [{ href: "/admin", label: "Utilizadores" }] : []),
+        ];
+
   return (
     <header className="border-b border-zinc-200 dark:border-zinc-800">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
@@ -34,33 +45,12 @@ export async function AppHeader() {
           <span className="font-semibold tracking-tight">Norma</span>
         </Link>
 
-        <nav className="flex items-center gap-5 text-sm">
-          {user?.role === "root" ? (
-            <Link href="/root" className="hover:underline">
-              Entidades
+        <nav className="hidden items-center gap-5 text-sm sm:flex">
+          {navLinks.map((l) => (
+            <Link key={l.href} href={l.href} className="hover:underline">
+              {l.label}
             </Link>
-          ) : (
-            <>
-              <Link href="/ajuda" className="hover:underline">
-                Ajuda
-              </Link>
-              {user && (
-                <Link href="/projetos" className="hover:underline">
-                  Projetos
-                </Link>
-              )}
-              {user && (
-                <Link href="/memorias" className="hover:underline">
-                  Memórias
-                </Link>
-              )}
-              {user?.role === "admin" && (
-                <Link href="/admin" className="hover:underline">
-                  Utilizadores
-                </Link>
-              )}
-            </>
-          )}
+          ))}
 
           {user ? (
             <div className="flex items-center gap-3 border-l border-zinc-200 pl-5 dark:border-zinc-800">
@@ -97,6 +87,14 @@ export async function AppHeader() {
 
           <ThemeToggle />
         </nav>
+
+        <MobileNav
+          navLinks={navLinks}
+          userName={user?.name ?? null}
+          userRole={user?.role ?? null}
+          entidadeNome={entidade?.nome ?? null}
+          onSignOut={user ? handleSignOut : undefined}
+        />
       </div>
     </header>
   );

@@ -25,6 +25,7 @@ export function memoriaToInput(record: MemoriaDescritiva): MemoriaInput {
     confrontacaoSul: record.confrontacaoSul,
     confrontacaoNascente: record.confrontacaoNascente,
     confrontacaoPoente: record.confrontacaoPoente,
+    enquadramentoEnvolvente: record.enquadramentoEnvolvente ?? undefined,
     areaTotalConstrucao: Number(record.areaTotalConstrucao),
     areaImplantacao: Number(record.areaImplantacao),
     cerceaMetros: Number(record.cerceaMetros),
