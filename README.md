@@ -50,8 +50,8 @@ vais precisar dela no `.env`.
    cartão para verificação; o tier Always Free em si não é cobrado).
 2. Cria uma instância Compute Engine: shape **e2-micro**, numa das regiões
    elegíveis para Always Free — `us-west1`, `us-central1` ou `us-east1`
-   (fora destas, a instância deixa de ser grátis). Imagem Ubuntu (LTS mais
-   recente). Nota: por estar nos EUA, há alguma latência extra para
+   (fora destas, a instância deixa de ser grátis). Imagem Debian ou Ubuntu
+   (a mais recente). Nota: por estar nos EUA, há alguma latência extra para
    utilizadores em Portugal — aceitável para validação inicial.
 3. Nas regras de firewall da VM, permite tráfego HTTP (porta 80) e HTTPS
    (porta 443) de qualquer origem.
@@ -61,8 +61,13 @@ vais precisar dela no `.env`.
 Por SSH à VM:
 
 ```bash
-sudo apt update && sudo apt install -y docker.io docker-compose-v2 git
-sudo usermod -aG docker $USER   # faz logout/login outra vez a seguir a isto
+# instala o Docker (funciona igual em Debian e Ubuntu — o nome exato do
+# pacote "docker compose" varia consoante a distro/versão, por isso usa-se
+# o script oficial em vez de "apt install docker-compose-v2")
+curl -fsSL https://get.docker.com | sudo sh
+sudo apt install -y git
+sudo usermod -aG docker $USER
+newgrp docker   # ativa o grupo já nesta sessão, sem precisar de sair e voltar a entrar
 
 # swap de segurança — a e2-micro só tem 1GB RAM, isto dá alguma margem
 # para não rebentar com Postgres + Next.js + Caddy ao mesmo tempo
@@ -70,7 +75,7 @@ sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
 sudo mkswap /swapfile && sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 
-git clone <o-url-do-teu-repositório> norma
+git clone https://github.com/<o-teu-user>/norma.git norma
 cd norma
 cp .env.production.example .env
 nano .env   # preenche AUTH_SECRET (openssl rand -base64 33), GROQ_API_KEY, ROOT_*, ADMIN_*, e DOMAIN se tiveres um (deixa ":80" se não tiveres)
